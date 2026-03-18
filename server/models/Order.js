@@ -20,6 +20,7 @@ const customerSchema = new mongoose.Schema({
 
 const orderSchema = new mongoose.Schema({
   orderId:           { type: String, required: true, unique: true, index: true },
+  userId:            { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   items:             [orderItemSchema],
   customer:          customerSchema,
   subtotal:          { type: Number, required: true },
@@ -45,9 +46,10 @@ const orderSchema = new mongoose.Schema({
 
 // ---------- Statics ----------
 
-orderSchema.statics.createOrder = async function (items, customer, summary) {
+orderSchema.statics.createOrder = async function (items, customer, summary, userId) {
   const order = await this.create({
     orderId: uuidv4().slice(0, 8).toUpperCase(),
+    userId,
     items: items.map(i => ({
       productId: i.productId,
       name:      i.product.name,
@@ -85,8 +87,10 @@ orderSchema.statics.getById = function (id) {
   );
 };
 
-orderSchema.statics.updateStatus = function (orderId, status) {
-  return this.findOneAndUpdate({ orderId }, { status }, { new: true });
+orderSchema.statics.getByUserId = function (userId) {
+  return this.find({ userId }).sort({ createdAt: -1 }).lean().then(docs =>
+    docs.map(d => ({ ...d, id: d.orderId, _id: undefined, __v: undefined }))
+  );
 };
 
 module.exports = mongoose.model('Order', orderSchema);

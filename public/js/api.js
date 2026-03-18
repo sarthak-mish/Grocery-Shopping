@@ -5,9 +5,15 @@ const API = {
   base: '/api',
 
   async request(path, options = {}) {
+    const headers = { 'Content-Type': 'application/json' };
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     try {
       const res = await fetch(`${this.base}${path}`, {
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         ...options,
       });
       const data = await res.json();
@@ -17,6 +23,36 @@ const API = {
       console.error(`API Error [${path}]:`, err);
       throw err;
     }
+  },
+
+  // Auth
+  async register(userData) {
+    return this.request('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
+  },
+
+  async login(credentials) {
+    return this.request('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(credentials),
+    });
+  },
+
+  async getProfile() {
+    return this.request('/auth/profile');
+  },
+
+  async updateProfile(userData) {
+    return this.request('/auth/profile', {
+      method: 'PUT',
+      body: JSON.stringify(userData),
+    });
+  },
+
+  async logout() {
+    return this.request('/auth/logout', { method: 'POST' });
   },
 
   // Products

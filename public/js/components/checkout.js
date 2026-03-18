@@ -154,3 +154,114 @@ function renderOrdersPage(orders) {
     </div>
   `;
 }
+
+function renderLoginPage() {
+  return `
+    <div class="auth-page">
+      <div class="auth-container">
+        <div class="auth-header">
+          <h1>Welcome Back</h1>
+          <p>Sign in to your FreshCart account</p>
+        </div>
+
+        <form class="auth-form">
+          <div class="form-group">
+            <label for="login-email">Email *</label>
+            <input type="email" id="login-email" placeholder="your@email.com" required />
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password *</label>
+            <input type="password" id="login-password" placeholder="Your password" required />
+          </div>
+          <button type="button" class="auth-btn" id="login-btn" data-action="login">
+            Sign In
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          <p>Don't have an account? <a href="#" data-action="go-signup">Sign up</a></p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderSignupPage() {
+  return `
+    <div class="auth-page">
+      <div class="auth-container">
+        <div class="auth-header">
+          <h1>Join FreshCart</h1>
+          <p>Create your account to start shopping</p>
+        </div>
+
+        <form class="auth-form">
+          <div class="form-group">
+            <label for="signup-name">Full Name *</label>
+            <input type="text" id="signup-name" placeholder="John Doe" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="signup-email">Email *</label>
+              <input type="email" id="signup-email" placeholder="your@email.com" required />
+            </div>
+            <div class="form-group">
+              <label for="signup-phone">Phone</label>
+              <input type="tel" id="signup-phone" placeholder="+1 (555) 123-4567" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="signup-password">Password *</label>
+            <input type="password" id="signup-password" placeholder="At least 6 characters" required />
+          </div>
+          <div class="form-group">
+            <label for="signup-address">Delivery Address</label>
+            <textarea id="signup-address" placeholder="123 Main St, Apt 4B, City, State, ZIP"></textarea>
+          </div>
+          <button type="button" class="auth-btn" id="signup-btn" data-action="signup">
+            Create Account
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          <p>Already have an account? <a href="#" data-action="go-login">Sign in</a></p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderProfilePage(user) {
+  return `
+    <div class="profile-page">
+      <div class="back-link" data-action="go-home">← Back to shopping</div>
+      <h1>My Profile</h1>
+      <p class="profile-subtitle">Update your account information</p>
+
+      <div class="profile-form">
+        <div class="form-group">
+          <label for="profile-name">Full Name *</label>
+          <input type="text" id="profile-name" value="${user.name || ''}" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="profile-email">Email</label>
+            <input type="email" id="profile-email" value="${user.email || ''}" readonly />
+            <small class="form-hint">Email cannot be changed</small>
+          </div>
+          <div class="form-group">
+            <label for="profile-phone">Phone</label>
+            <input type="tel" id="profile-phone" value="${user.phone || ''}" placeholder="+1 (555) 123-4567" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="profile-address">Delivery Address</label>
+          <textarea id="profile-address" placeholder="123 Main St, Apt 4B, City, State, ZIP">${user.address || ''}</textarea>
+        </div>
+        <button class="profile-btn" id="profile-btn" data-action="update-profile">
+          Update Profile
+        </button>
+      </div>
+    </div>
+  `;
+}

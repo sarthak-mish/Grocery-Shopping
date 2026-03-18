@@ -2,6 +2,7 @@ const express = require('express');
 const Cart = require('../models/Cart');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
+const { authenticateToken } = require('../middleware/auth');
 const router = express.Router();
 
 function getSessionId(req) {
@@ -9,7 +10,7 @@ function getSessionId(req) {
 }
 
 // POST /api/orders — place an order
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
   try {
     const { customer } = req.body;
     if (!customer || !customer.name || !customer.email || !customer.address) {
@@ -36,7 +37,7 @@ router.post('/', async (req, res) => {
       }
     }
 
-    const order = await Order.createOrder(cartSummary.items, customer, cartSummary);
+    const order = await Order.createOrder(cartSummary.items, customer, cartSummary, req.user._id);
     await Cart.clear(sessionId);
 
     res.status(201).json({ success: true, order });
@@ -45,10 +46,10 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /api/orders — list all orders
-router.get('/', async (_req, res) => {
+// GET /api/orders — list user's orders
+router.get('/', authenticateToken, async (req, res) => {
   try {
-    const orders = await Order.getAll();
+    const orders = await Order.getByUserId(req.user._id);
     res.json({ success: true, orders });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
