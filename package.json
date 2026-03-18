@@ -1,5 +1,5 @@
 {
-  "name": "freshcart-grocery",
+  "name": "freshcart-grocery-app",
   "version": "1.0.0",
   "description": "FreshCart — A premium grocery shopping application",
   "main": "server/index.js",
